@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จองสำเร็จ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .result {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #007BFF;
+            color: #007BFF;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        th, td {
+            border: 1px solid #007BFF;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .history {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .history ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .history li {
+            background: #fff3cd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ffcc00;
+            font-size: 14px;
+        }
+
+        button.cancel-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button.cancel-btn:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>จองสำเร็จ</h2>
+
+    <!-- การจองล่าสุดแสดงในรูปแบบตาราง -->
+    <div class="result" id="resultText">
+        <!-- ข้อมูลการจองล่าสุด -->
+    </div>
+
+    <h3>📜 รายการจองทั้งหมด</h3>
+    <div class="history" id="historyList">
+        <!-- รายการประวัติการจอง -->
+    </div>
+
+    <a href="งานที่3.html" target="_blank">
+        <button class="back-btn">กลับไปหน้าหลัก</button>
+    </a>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // อ่านข้อมูลการจองจาก localStorage
+        let bookings = JSON.parse(localStorage.getItem("bookings")) || [];
+
+        // แสดงข้อมูลการจองล่าสุดในตาราง
+        if (bookings.length > 0) {
+            let latestBooking = bookings[bookings.length - 1];
+            document.getElementById("resultText").innerHTML = `
+                <table>
+                    <tr>
+                        <th>ข้อมูล</th>
+                        <th>รายละเอียด</th>
+                    </tr>
+                    <tr>
+                        <td>ชื่อ</td>
+                        <td><strong>${latestBooking.name}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>ห้อง</td>
+                        <td><strong>${latestBooking.room}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>วันที่เริ่ม</td>
+                        <td><strong>${latestBooking.startDate}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>เวลาเริ่ม</td>
+                        <td><strong>${latestBooking.startTime}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>วันที่สิ้นสุด</td>
+                        <td><strong>${latestBooking.endDate}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>เวลาสิ้นสุด</td>
+                        <td><strong>${latestBooking.endTime}</strong></td>
+
+                    </tr>
+                    <tr>
+                        <td>เบอร์โทรศัพท์</td>
+                        <td><strong>${latestBooking.phone}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>จำนวนผู้เข้าประชุม</td>
+                        <td><strong>${latestBooking.participants}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>ตำแหน่ง</td>
+                        <td><strong>${latestBooking.position}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>สังกัด</td>
+                        <td><strong>${latestBooking.department}</strong></td>
+                    </tr>
+                </table>
+            `;
+        } else {
+            document.getElementById("resultText").innerHTML = "❌ ไม่มีข้อมูลการจอง!";
+        }
+
+        // แสดงรายการจองทั้งหมดและฟังก์ชันยกเลิกการจอง
+        let historyContainer = document.getElementById("historyList");
+        if (bookings.length > 0) {
+            let historyHTML = "<ul>";
+            bookings.forEach((booking, index) => {
+                historyHTML += `
+                    <li>
+                        🏢 ห้อง: <strong>${booking.room}</strong> <br>
+                        📅 วันที่: <strong>${booking.startDate}</strong> - <strong>${booking.endDate}</strong> <br>
+                        ⏰ เวลา: <strong>${booking.startTime}</strong> - <strong>${booking.endTime}</strong> <br>
+                        👥 จำนวนผู้เข้าประชุม: <strong>${booking.participants}</strong> <br>
+                        ชื่อ: <strong>${booking.name}</strong> <br>
+                        ตำแหน่ง: <strong>${booking.position}</strong> <br>
+                        สังกัด: <strong>${booking.department}</strong> <br>
+                        <button class="cancel-btn" onclick="cancelBooking(${index})">ยกเลิกการจอง</button>
+                    </li>
+                `;
+            });
+            historyHTML += "</ul>";
+            historyContainer.innerHTML = historyHTML;
+        } else {
+            historyContainer.innerHTML = "<p>🔹 ยังไม่มีประวัติการจอง</p>";
+        }
+    });
+
+    // ฟังก์ชันสำหรับยกเลิกการจอง
+    function cancelBooking(index) {
+        let bookings = JSON.parse(localStorage.getItem("bookings")) || [];
+        bookings.splice(index, 1); // ลบการจองจากรายการ
+        localStorage.setItem("bookings", JSON.stringify(bookings)); // อัปเดตข้อมูลใน localStorage
+        alert("การจองถูกยกเลิกแล้ว!");
+        location.reload(); // รีเฟรชหน้าเพื่อแสดงผลการเปลี่ยนแปลง
+    }
+</script>
+
+</body>
+</html>

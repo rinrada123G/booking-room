@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จองห้องประชุม</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: C3EEFA;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .result {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #007BFF;
+            color: #007BFF;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+		
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>จองห้องประชุม</h2>
+      <form id="bookingForm">
+        <label for="name">ชื่อผู้จอง:</label>
+            <input type="text" id="name" placeholder="กรอกชื่อของคุณ" required>
+
+            <label for="phone">เบอร์โทรศัพท์:</label>
+            <input type="text" id="phone" placeholder="เบอร์โทรศัพท์" required>
+
+            <label for="room">สถานที่ประชุม:</label>
+            <select id="room" required>
+                <option value="" disabled selected>-- สถานที่ประชุม --</option>
+                <option value="ห้องประชุมระฆังทอง">ห้องประชุมระฆังทอง</option>
+                <option value="ห้องประชุมย่อย อาคาร 5">ห้องประชุมย่อย อาคาร 5</option>
+                <option value="ห้อง smart classroom">ห้อง smart classroom</option>
+                <option value="ห้อง STEM ศึกษา">ห้อง STEM ศึกษา</option>
+                <option value="ห้องประชุมกันเกรา(อาคาร1 ชั้น2 )">ห้องประชุมกันเกรา(อาคาร1 ชั้น2 )</option>
+                <option value="ห้องประชุมอาคาร 5 ชั้น3">ห้องประชุมอาคาร 5 ชั้น3</option>
+                <option value="หอประชุมอเนกประสงค์ (โรงอาหารหลังเก่า)">หอประชุมอเนกประสงค์ (โรงอาหารหลังเก่า)</option>
+                <option value="โรงอาหาร">โรงอาหาร</option>
+            </select>
+
+            <label for="date">วันที่เริ่มจอง:</label>
+            <input type="date" id="date" required>
+            
+            <label for="time">เวลาที่เริ่มจอง:</label>
+            <input type="time" id="time" required>
+
+            <label for="endDate">วันที่สิ้นสุด:</label>
+            <input type="date" id="endDate" required>
+            
+            <label for="endTime">เวลาที่สิ้นสุด:</label>
+            <input type="time" id="endTime" required>
+
+            <label for="participants">จำนวนผู้เข้าประชุม:</label>
+            <input type="number" id="participants" min="1" required>
+            
+            <label for="position">ตำแหน่ง:</label>
+            <select id="position" required>
+                <option value="" disabled selected>-- ตำแหน่ง --</option>
+                <option value="ผู้อำนวยการ">ผู้อำนวยการ</option>
+                <option value="รองผู้อำนวยการ">รองผู้อำนวยการ</option>
+                <option value="คุณครู">คุณครู</option>
+                <option value="บุคลากร">บุคลากร</option>
+            </select>
+
+        <label for="department">สังกัด:</label>
+          <select id="department" required>
+              <option value="" disabled selected>-- สังกัด --</option>
+              <option value="ฝ่ายบริหารทรัพยากร">ฝ่ายบริหารทรัพยากร</option>
+              <option value="ฝ่ายแผนงานและความร่วมมือ">ฝ่ายแผนงานและความร่วมมือ</option>
+              <option value="ฝ่ายพัฒนากิจการนักเรียน นักศึกษา">ฝ่ายพัฒนากิจการนักเรียน นักศึกษา</option>
+              <option value="ฝ่ายวิชาการ">ฝ่ายวิชาการ</option>
+          </select>
+
+          
+            <button type="submit">ยืนยันการจอง</button>
+        </form>
+         <a href="Book a room4.html" target="_blank">
+        <button type="submit">ประวัติการจอง</button>
+        </form>
+         </a>
+        
+        <div class="result" id="result" style="display: none;">
+          <p id="resultText"></p>
+      </div>
+    </div>
+
+   <script>
+    const form = document.getElementById("bookingForm");
+    const resultDiv = document.getElementById("result");
+    const resultText = document.getElementById("resultText");
+
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const name = document.getElementById("name").value;
+        const phone = document.getElementById("phone").value;
+        const room = document.getElementById("room").value;
+        const startDate = document.getElementById("date").value;
+        const startTime = document.getElementById("time").value;
+        const endDate = document.getElementById("endDate").value;
+        const endTime = document.getElementById("endTime").value;
+        const participants = document.getElementById("participants").value;
+        const position = document.getElementById("position").value;
+        const department = document.getElementById("department").value;
+
+        if (name && room && startDate && startTime && endDate && endTime) {
+            // ดึงข้อมูลการจองที่มีอยู่
+            let bookings = JSON.parse(localStorage.getItem("bookings")) || [];
+
+            // ตรวจสอบว่ามีการจองซ้ำในช่วงเวลานี้หรือไม่
+            const isDuplicate = bookings.some(booking => 
+                booking.room === room &&
+                (
+                    (startDate >= booking.startDate && startDate <= booking.endDate) || 
+                    (endDate >= booking.startDate && endDate <= booking.endDate)
+                ) &&
+                (
+                    (startTime >= booking.startTime && startTime <= booking.endTime) ||
+                    (endTime >= booking.startTime && endTime <= booking.endTime)
+                )
+            );
+
+            if (isDuplicate) {
+                alert("❌ ห้องนี้ถูกจองแล้วในช่วงเวลาที่เลือก กรุณาเลือกช่วงเวลาใหม่!");
+                return;
+            }
+
+            // ถ้าไม่มีการจองซ้ำ ให้บันทึกข้อมูลใหม่
+            const booking = {
+                name,
+                phone,
+                room,
+                startDate,
+                startTime,
+                endDate,
+                endTime,
+                participants,
+                position,
+                department
+            };
+
+            bookings.push(booking);
+            localStorage.setItem("bookings", JSON.stringify(bookings));
+
+            // แสดงผลการจองสำเร็จ
+            resultText.innerHTML = `✅ คุณ <strong>${name}</strong> ได้จอง <strong>${room}</strong><br>
+                                    📅 วันที่เริ่ม: <strong>${startDate}</strong> ⏰ เวลา: <strong>${startTime}</strong> - <strong>${endTime}</strong>`;
+            resultDiv.style.display = "block";
+
+            // รีเซ็ตฟอร์ม
+            form.reset();
+        } else {
+            alert("กรุณากรอกข้อมูลให้ครบถ้วน!");
+        }
+    });
+</script>
